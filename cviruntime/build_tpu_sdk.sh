@@ -47,7 +47,10 @@ if [ ! -e $BUILD_PATH/build_flatbuffers_host ]; then
   mkdir -p $BUILD_PATH/build_flatbuffers_host
 fi
 pushd $BUILD_PATH/build_flatbuffers_host
+# flatbuffers 1.11 appends -std=c++0x in its CMakeLists; force C++17 for the
+# host build so the system absl pulled in by base.h's __has_include probe compiles.
 cmake -G Ninja -DCMAKE_INSTALL_PREFIX=$FLATBUFFERS_HOST_PATH \
+    -DCMAKE_CXX_STANDARD=17 \
     $TOP_DIR/flatbuffers
 cmake --build . --target install
 test $? -ne 0 && echo "build flatbuffers failed !!" && popd && exit 1
