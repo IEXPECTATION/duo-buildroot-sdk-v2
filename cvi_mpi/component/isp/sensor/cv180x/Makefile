@@ -19,6 +19,10 @@ endef
 
 .PHONY : prepare clean $(sensor-y)
 all: prepare $(sensor-y) all_sensor
+# all_sensor just archives the .o files produced by the $(sensor-y) sub-builds.
+# Without this dependency parallel make runs Makefile_full too early, and its
+# implicit rules then compile the sources without any -I include paths.
+all_sensor: $(sensor-y)
 
 prepare:
 	@echo "#################################################"
